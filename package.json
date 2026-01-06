@@ -14,8 +14,11 @@
     "real-time",
     "customer-support"
   ],
-  "author": "",
+  "author": "Pratik Khaire",
   "license": "ISC",
+  "engines": {
+    "node": ">=18.0.0"
+  },
   "type": "commonjs",
   "dependencies": {
     "bcryptjs": "^3.0.3",
