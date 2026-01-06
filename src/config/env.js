@@ -9,7 +9,6 @@ const env = {
   CORS_ORIGIN: process.env.CORS_ORIGIN || '*'
 };
 
-// Validate required environment variables
 const requiredEnvVars = ['MONGODB_URI', 'JWT_SECRET'];
 for (const envVar of requiredEnvVars) {
   if (!process.env[envVar]) {

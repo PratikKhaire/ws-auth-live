@@ -32,7 +32,6 @@ const conversationSchema = new mongoose.Schema(
   }
 );
 
-// Index for efficient querying
 conversationSchema.index({ candidateId: 1, status: 1 });
 conversationSchema.index({ supervisorId: 1 });
 conversationSchema.index({ agentId: 1 });

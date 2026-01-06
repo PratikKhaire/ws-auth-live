@@ -1,9 +1,5 @@
 const { ForbiddenError } = require('../utils/errors');
 
-/**
- * Role-Based Access Control Middleware
- * @param {string[]} allowedRoles - Array of roles that can access the route
- */
 const rbacMiddleware = (allowedRoles) => {
   return (req, res, next) => {
     if (!req.user) {

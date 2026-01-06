@@ -1,6 +1,3 @@
-/**
- * Standard success response
- */
 const successResponse = (res, data, statusCode = 200) => {
   return res.status(statusCode).json({
     success: true,
@@ -8,9 +5,6 @@ const successResponse = (res, data, statusCode = 200) => {
   });
 };
 
-/**
- * Standard error response
- */
 const errorResponse = (res, message, statusCode = 400) => {
   return res.status(statusCode).json({
     success: false,

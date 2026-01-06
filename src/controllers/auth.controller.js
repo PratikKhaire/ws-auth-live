@@ -2,11 +2,8 @@ const jwt = require('jsonwebtoken');
 const { User } = require('../models');
 const { env } = require('../config');
 const { successResponse, errorResponse } = require('../utils/response');
-const { BadRequestError, UnauthorizedError, NotFoundError } = require('../utils/errors');
+const { BadRequestError, UnauthorizedError, NotFoundError, ConflictError } = require('../utils/errors');
 
-/**
- * Generate JWT Token
- */
 const generateToken = (user) => {
   return jwt.sign(
     {
@@ -19,48 +16,38 @@ const generateToken = (user) => {
   );
 };
 
-/**
- * POST /auth/signup
- * Register a new user
- */
 const signup = async (req, res, next) => {
   try {
     const { name, email, password, role, supervisorId } = req.body;
 
-    // Validate required fields
     if (!name || !email || !password || !role) {
       throw new BadRequestError('Name, email, password, and role are required');
     }
 
-    // Validate role
     const validRoles = ['admin', 'supervisor', 'agent', 'candidate'];
     if (!validRoles.includes(role)) {
-      throw new BadRequestError(`Invalid role. Must be one of: ${validRoles.join(', ')}`);
+      throw new BadRequestError('Invalid role');
     }
 
-    // Validate supervisorId for agents
     if (role === 'agent') {
       if (!supervisorId) {
         throw new BadRequestError('supervisorId is required for agents');
       }
 
-      // Verify supervisor exists and is a supervisor
       const supervisor = await User.findById(supervisorId);
       if (!supervisor) {
-        throw new NotFoundError('Supervisor not found');
+        throw new BadRequestError('Invalid supervisor ID');
       }
       if (supervisor.role !== 'supervisor') {
-        throw new BadRequestError('supervisorId must reference a user with supervisor role');
+        throw new BadRequestError('Invalid supervisor ID');
       }
     }
 
-    // Check if user already exists
     const existingUser = await User.findOne({ email });
     if (existingUser) {
-      throw new BadRequestError('User with this email already exists');
+      throw new ConflictError('Email already exists');
     }
 
-    // Create user
     const userData = { name, email, password, role };
     if (role === 'agent') {
       userData.supervisorId = supervisorId;
@@ -79,34 +66,26 @@ const signup = async (req, res, next) => {
   }
 };
 
-/**
- * POST /auth/login
- * User login
- */
 const login = async (req, res, next) => {
   try {
     const { email, password } = req.body;
 
-    // Validate required fields
     if (!email || !password) {
       throw new BadRequestError('Email and password are required');
     }
 
-    // Find user with password
     const user = await User.findOne({ email }).select('+password');
 
     if (!user) {
       throw new UnauthorizedError('Invalid email or password');
     }
 
-    // Check password
     const isMatch = await user.comparePassword(password);
 
     if (!isMatch) {
       throw new UnauthorizedError('Invalid email or password');
     }
 
-    // Generate token
     const token = generateToken(user);
 
     return successResponse(res, { token });
@@ -115,10 +94,6 @@ const login = async (req, res, next) => {
   }
 };
 
-/**
- * GET /auth/me
- * Get current authenticated user
- */
 const getMe = async (req, res, next) => {
   try {
     const user = await User.findById(req.user.userId);
