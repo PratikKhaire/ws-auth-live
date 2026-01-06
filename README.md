@@ -204,6 +204,14 @@ wscat -c "ws://localhost:3000/ws?token=<JWT_TOKEN>"
 {"event": "SEND_MESSAGE", "data": {"conversationId": "<CONVERSATION_ID>", "content": "Hello!"}}
 ```
 
+## Security
+
+- **Password Hashing**: All passwords are hashed using bcrypt with salt rounds
+- **JWT Authentication**: Secure token-based authentication for API and WebSocket
+- **Role-Based Access Control**: Fine-grained permissions based on user roles
+- **Input Validation**: Request validation to prevent injection attacks
+- **CORS Configuration**: Configurable cross-origin resource sharing
+
 ## License
 
 ISC
