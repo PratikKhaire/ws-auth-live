@@ -1,5 +1,10 @@
 # Live Support Chat System Backend
 
+![Node.js](https://img.shields.io/badge/Node.js-18+-green?logo=node.js)
+![MongoDB](https://img.shields.io/badge/MongoDB-6.0+-green?logo=mongodb)
+![WebSocket](https://img.shields.io/badge/WebSocket-ws-blue)
+![License](https://img.shields.io/badge/License-ISC-yellow)
+
 A robust backend system for a real-time customer support platform with JWT authentication, role-based access control, and WebSocket-based messaging.
 
 ## Features
